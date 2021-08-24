@@ -20,11 +20,15 @@ set_brightness() {
 
     # keep between 0-100
     if [ "${1}" = '+' ]; then
-        if [ "${brightness}" -lt 100 ]; then brightness=$((brightness + ${2}))
+        if [ "${brightness}" -lt 100 ]; then
+            brightness=$((brightness + ${2}))
+            [ "${brightness}" -gt 100 ] && brightness=100
         else return
         fi
     elif [ "${1}" = '-' ]; then
-        if [ "${brightness}" -gt 0 ]; then brightness=$((brightness - ${2}))
+        if [ "${brightness}" -gt 0 ]; then
+            brightness=$((brightness - ${2}))
+            [ "${brightness}" -lt 0 ] && brightness=0
         else return
         fi
     fi
