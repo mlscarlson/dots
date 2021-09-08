@@ -68,10 +68,10 @@ main() {
     while getopts 'ot' opt; do
         case "${opt}" in
             # open mixer
-            o) open && return   ;;
+            o) open;   return ;;
             # toggle if t flag used
-            t) toggle && return ;;
-            *) return           ;;
+            t) toggle; return ;;
+            *) return         ;;
         esac
     done
 

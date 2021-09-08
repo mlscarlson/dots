@@ -9,7 +9,8 @@ NEWLINE='
 '
 
 get_credential() {
-    credential="$(printf '%s\n' "${credentials}" | grep "\<${1}\>" | awk -F ':' '{ print $2 }')"
+    # awk statement takes everything after the first colon
+    credential="$(printf '%s\n' "${credentials}" | grep "\<${1}\>" | awk -F ':' '{ st = index($0, ":"); print substr($0, st + 1) }')"
     credential="${credential%\'}"
     credential="${credential#\'}"
 }

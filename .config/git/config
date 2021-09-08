@@ -4,3 +4,6 @@
     signingkey = 9CC4E75365C16465FFE752C94DDBF97211D4EA31
 [commit]
     gpgsign    = true
+[filter "gitignore"]
+	clean = "sed '/#gitignore$/'d"
+	smudge = cat
