@@ -10,7 +10,6 @@ get_ids() { awk -F ',' '{ for (i = 1; i <= NF; i++) if ($i ~ /"id"/) print $i }'
 # DO NOT SHARE THIS
 VULTR_API_KEY='RETRACTED'
 
-
 INSTANCE='mcarlson.xyz'
 
 INSTANCE_ID="$(curl 'https://api.vultr.com/v2/instances'    \
