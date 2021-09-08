@@ -22,6 +22,9 @@ toggle() {
 
     get_song_and_state
 
+    # no songs playing so don't do anything
+    if printf '%s\n' "${song}" | awk '{ print $1,$2 }' | grep -iq '^volume:\s[0-9][0-9]*%$'; then return 1; fi
+
     # convert first letter of state from lowercase to uppercase
     first_letter="$(printf '%s\n' "${state}" | cut -c 1 | tr '[:lower:]' '[:upper:]')"
     rest="$(printf '%s\n' "${state}" | cut -c 2-)"
