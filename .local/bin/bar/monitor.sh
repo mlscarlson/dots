@@ -6,7 +6,7 @@ ICON=''
 # brightness vcp code is 10
 VCP_CODE=10
 # cache used b/c ddcutil getvcp too expensive
-BRIGHTNESS="${XDG_CACHE_HOME:-${HOME}/.cache/}/bar/brightness"
+BRIGHTNESS="${XDG_CACHE_HOME:-${HOME}/.cache/}/dots/bar/brightness"
 
 get_brightness() {
     [ ! -f "${BRIGHTNESS}" ] && return 1
@@ -39,7 +39,7 @@ set_brightness() {
     env HERBE_ID=/0 herbe "Brightness: ${brightness}%" &
 
     # get actual brightness and send output to cache
-    printf '%s\n' "$(doas ddcutil getvcp ${VCP_CODE} | awk '{ print $9 }' | tr -d '[:punct:]')" 2>/dev/null > "${BRIGHTNESS}"
+    printf '%s\n' "$(doas ddcutil getvcp ${VCP_CODE} | awk '{ print $9 }' | tr -d '[:punct:]' 2>/dev/null)" > "${BRIGHTNESS}"
 }
 
 bar() {

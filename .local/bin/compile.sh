@@ -49,7 +49,7 @@ main() {
         'java') javac  "${file}" && java "${file}"                         ;;
         'py')   python "${file}"                                           ;;
         'sh')   sh     "${file}"                                           ;;
-        'tex')  printf 'reached'
+        'tex')  pdflatex --output-directory="${dir}" "${base}"
                 if grep -iq 'addbibresource' "${file}"; then
                     biber --input-directory  "${dir}" "${base}"
                 fi

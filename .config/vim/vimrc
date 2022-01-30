@@ -21,7 +21,9 @@ filetype plugin indent on
 " vim-plug: a minimalist vim plugin manager
 call plug#begin('~/.config/vim/plugged')
 Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 Plug 'cormacrelf/vim-colors-github'
+Plug 'fxn/vim-monochrome'
 Plug 'Valloric/YouCompleteMe'
 call plug#end()
 

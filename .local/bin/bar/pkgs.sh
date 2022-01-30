@@ -6,7 +6,7 @@ ICON=''
 UPGRADE_ICON=''
 UPGRADE_TMP='/tmp/upgrade-pkgs'
 AUR_HELPER='paru'
-PKGS="${XDG_CACHE_HOME:-${HOME}/.cache}/bar/pkgs"
+PKGS="${XDG_CACHE_HOME:-${HOME}/.cache}/dots/bar/pkgs"
 GET_TMP='/tmp/get-pkgs'
 GET_ICON=''
 
@@ -27,7 +27,7 @@ upgrade_pkgs() {
         # arch has both pacman and AUR repos; handle them
         upgrade_repo_pkgs() {
             while :; do
-                get_pkgs
+                get_pkgs silent
 
                 case "${1}" in
                     # official repos
@@ -72,6 +72,17 @@ upgrade_pkgs() {
 
     touch "${UPGRADE_TMP}"
 
+    # print pretty banner
+    # for some reason printing codes doesn't work in new terminal, so just use tput
+    theme=$(tput setaf 2)
+    reset=$(tput sgr0)
+    printf '%s\n\n' "${theme}██████╗ ██╗  ██╗ ██████╗ ███████╗
+██╔══██╗██║ ██╔╝██╔════╝ ██╔════╝
+██████╔╝█████╔╝ ██║  ███╗███████╗
+██╔═══╝ ██╔═██╗ ██║   ██║╚════██║
+██║     ██║  ██╗╚██████╔╝███████║
+╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚══════╝${reset}"
+
     # upgrade pkgs depending on os
     get_os
     case "${os}" in 'arch') upgrade_arch_pkgs ;; esac
@@ -83,7 +94,7 @@ upgrade_pkgs() {
 }
 
 get_pkgs() {
-    touch "${GET_TMP}"
+    [ "${1}" = 'silent' ] || touch "${GET_TMP}"
 
     get_os
     case "${os}" in
@@ -114,33 +125,49 @@ get_pkgs() {
     else touch "${PKGS}"
     fi
 
-    rm -f "${GET_TMP}"
+    [ -f "${GET_TMP}" ] && rm -f "${GET_TMP}"
 }
 
 bar() {
     # get count from cache, will be updated whenever get_pkgs is called, either manually or from cron, etc.
     [ -f "${PKGS}" ] && pkgs=$(grep -c '^' < "${PKGS}")
 
-    # upgrade icon
-    if [ -f "${UPGRADE_TMP}" ]; then printf '%s\n' "${UPGRADE_ICON}"
     # get icon
-    elif [ -f "${GET_TMP}" ]; then printf '%s\n' "${GET_ICON}"
+    [ -f "${GET_TMP}" ] && printf '%s\n' "${GET_ICON}" && return
+
+    # upgrade icon
+    #shellcheck disable=SC2009
+    if ps -ef | grep -i '\<upgrade_pkgs\>'| grep -iqv '\<grep\>'; then printf '%s\n' "${UPGRADE_ICON}"
     # icon and count
     else printf '%s\n' "${ICON} ${pkgs}"
     fi
+}
+
+open() {
+    ${TERMINAL} -c "${TERMINAL}" -e pkgs.sh upgrade_pkgs
+    get_pkgs &
 }
 
 main() {
     # called from bar
     [ ${#} -eq 0 ] && bar
 
-    # bar usage
-    case ${BLOCK_BUTTON} in 2) get_pkgs ;; esac
+    # upgrade_pkgs is argument so function can be run in new terminal
+    case "${1}" in upgrade_pkgs) upgrade_pkgs && return 0 ;; esac
 
-    while getopts 'gu' opt; do
+    # bar usage
+    case ${BLOCK_BUTTON} in
+        # pass upgrade_pkgs to new terminal
+        1) open     ;;
+        2) get_pkgs ;;
+    esac
+
+    while getopts 'gou' opt; do
         case "${opt}" in
             # get upgradable pkgs
             g) get_pkgs     ;;
+            # upgrade pkgs in new terminal
+            o) open         ;;
             # upgrade if called with u flag
             u) upgrade_pkgs ;;
             *) return       ;;

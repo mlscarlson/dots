@@ -85,7 +85,7 @@ export FFF_OPENER="${HOME}/.local/bin/open.sh"
 export FFF_STAT_CMD="stat"
 
 # pfetch
-export HOSTNAME='pc'
+export HOSTNAME='laptop'
 export PF_INFO='ascii title os host kernel uptime pkgs memory shell editor wm palette'
 export PF_COL1=2
 

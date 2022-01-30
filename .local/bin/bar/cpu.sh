@@ -16,7 +16,7 @@ DELAY=3.15
 TEMP="$(ls /sys/class/thermal/thermal_zone2*/temp)"
 
 # cache used b/c awk and delay is time expensive
-USAGE="${XDG_CACHE_HOME:-${HOME}/.cache/}/bar/usage"
+USAGE="${XDG_CACHE_HOME:-${HOME}/.cache/}/dots/bar/usage"
 
 calculate_temp() {
     [ -f "${TEMP}" ] && temp=$(cat "${TEMP}")

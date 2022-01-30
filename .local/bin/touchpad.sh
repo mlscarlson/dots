@@ -11,8 +11,8 @@ main() {
 
     # toggle touchpad also with xinput
     {
-        if [ "${flag}" -eq 1 ]; then xinput --disable "${tp}" && herbe 'Touchpad disabled'
-        else xinput --enable "${tp}" && herbe 'Touchpad enabled'
+        if [ "${flag}" -eq 1 ]; then xinput --disable "${tp}" && env HERBE_ID=/0 herbe 'Touchpad disabled' &
+        else xinput --enable "${tp}" && env HERBE_ID=/0 herbe 'Touchpad enabled' &
         fi
     } &
 }

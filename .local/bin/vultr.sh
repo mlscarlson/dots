@@ -30,17 +30,21 @@ oldest_snapshot_id="${1}"
 SNAPSHOT_LIMIT=11
 snapshot_count=$(printf '%s\n' "${snapshot_ids}" | wc -w)
 
-# Delete oldest snapshot if limit if reached
-if [ "${snapshot_count}" -eq "${SNAPSHOT_LIMIT}" ]; then
-    curl "https://api.vultr.com/v2/snapshots/${oldest_snapshot_id}" -X DELETE -H "Authorization: Bearer ${VULTR_API_KEY}" || exit 1;
-fi
+main() {
+    # Delete oldest snapshot if limit if reached
+    if [ "${snapshot_count}" -eq "${SNAPSHOT_LIMIT}" ]; then
+        curl "https://api.vultr.com/v2/snapshots/${oldest_snapshot_id}" -X DELETE -H "Authorization: Bearer ${VULTR_API_KEY}" || exit 1;
+    fi
 
-# Create new snapshot for instance
-curl 'https://api.vultr.com/v2/snapshots'         \
-    -X POST                                       \
-    -H "Authorization: Bearer ${VULTR_API_KEY}"   \
-    -H 'Content-Type: application/json'           \
-    --data '{
-        "instance_id":"'${INSTANCE_ID}'",
-        "description":"Snapshot of '${INSTANCE}'"
-    }'
+    # Create new snapshot for instance
+    curl 'https://api.vultr.com/v2/snapshots'         \
+        -X POST                                       \
+        -H "Authorization: Bearer ${VULTR_API_KEY}"   \
+        -H 'Content-Type: application/json'           \
+        --data '{
+            "instance_id":"'${INSTANCE_ID}'",
+            "description":"Snapshot of '${INSTANCE}'"
+        }'
+}
+
+main "${@}"

@@ -2,11 +2,12 @@
 #
 # xprofile
 
+autorandr -c
+"${HOME}/.local/bin/color.sh" -s # picom is compositor; touch blank config file to make picom like xcompmgr
 xrdb "${XDG_CONFIG_HOME:-${HOME}/.config/}/x/xresources"
 "${HOME}/.local/bin/lock.sh" &
 feh --no-fehbg --bg-scale "${XDG_DATA_HOME:-${HOME}/.local/share/}/wp"
 xclickroot -r "${HOME}/.local/bin/menu.sh" &
-xcompmgr &
 mpd &
 unclutter &
-xset r rate 250 50
+xset m 0 0 r rate 250 50 s noblank

@@ -18,13 +18,19 @@ get_mail() {
     printf '%s\n' "${GET_ICON}" > "${TMP}"
     mbsync -c "${ISYNCRC}" -aq
     rm -f "${TMP}"
+
+    # check if gpg key is cached
+    cached=$(gpg-connect-agent 'keyinfo --list' /bye 2>/dev/null | awk 'BEGIN { CACHED=0 } /^S/ { if ($7==1) { CACHED=1 } } END { if ($0 != "") { print CACHED } else { print "none" } }')
+
+    # kill gpg agent if not cached; else user wont be able to enter key later
+    [ "${cached}" -eq 0 ] && gpgconf --kill gpg-agent
 }
 
 open() {
     wd="$(pwd)"
-    cd "${DOWNLOADS_DIR}";
+    cd "${DOWNLOADS_DIR}" || return 1
     "${TERMINAL}" -c "${MAIL_CLIENT}" -e "${MAIL_CLIENT}"
-    cd "${wd}"
+    cd "${wd}" || return 1
     get_mail &
 }
 
@@ -38,6 +44,7 @@ bar() {
     [ -f "${TMP}" ] && printf '%s\n' "${GET_ICON}" && return
 
     # if mail open show just mail icon
+    #shellcheck disable=SC2009
     if ps -ef | grep -i "\<${MAIL_CLIENT}\>" | grep -iqv '\<grep\>'; then printf '%s\n' "${ICON}"
     # otherwise print both icon and count
     else printf '%s\n' "${ICON} ${total_mail_count}"

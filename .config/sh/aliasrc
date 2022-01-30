@@ -29,6 +29,7 @@ if uname -s | grep -i 'linux' >/dev/null 2>&1; then
          ls='ls -ahls --color=auto --group-directories-first' \
          mv='mv -v'                 			              \
          o='open.sh'                                          \
+         paru='paru --sudo doas'                              \
          rmdir='rmdir -pv --ignore-fail-on-non-empty'         \
          vi='vim'                                             \
          vm='qemu-system-x86_64                               \
@@ -85,6 +86,11 @@ alias dots='/usr/bin/git --git-dir=${HOME}/.dots/ --work-tree=${HOME}'
 alias ${MAIL_CLIENT}='"${HOME}/.local/bin/bar/mail.sh" -o'
 
 # youtube
+# NOTE: since 03 december 2021, youtube-dl should be a symlink to yt-dlp
+#       youtube-dl seems to be dead (last commit 01 july 2021) and there are unresolved issues (e.g., bandwidth throttling)
+#       yt-dlp is a fork of youtube-dl and seems to be a perfect stand-in for most use cases
+#       all programs that rely on youtube-dl should work
+#       https://github.com/yt-dlp/yt-dlp
 alias \
     yt='youtube-dl -i -o "${DOWNLOADS_DIR}/%(uploader)s/%(title)s.%(ext)s" --add-metadata'                     \
     yta='yt -f bestaudio/best -x'                                                                              \
